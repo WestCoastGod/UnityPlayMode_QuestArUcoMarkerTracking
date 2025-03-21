@@ -16,7 +16,7 @@ namespace TryAR.MarkerTracking
     /// marker detection, and visualization management.
     /// </summary>
     [MetaCodeSample("PassthroughCameraApiSamples-MarkerTracking")]
-    public class TrackingAppCoordinator : MonoBehaviour
+    public class ChArUcoTrackingAppCoordinator : MonoBehaviour
     {
         /// <summary>
         /// Serializable class for mapping marker IDs to GameObjects in the Inspector.
@@ -46,10 +46,9 @@ namespace TryAR.MarkerTracking
         [SerializeField] private float m_canvasDistance = 1f;
 
         [Header("Marker Tracking")]
-        [SerializeField] private ArUcoMarkerTracking m_arucoMarkerTracking;
+        [SerializeField] private ChArUcoMarkerTracking m_charucoMarkerTracking;
         [SerializeField, Tooltip("List of marker IDs mapped to their corresponding GameObjects")]
-        private List<MarkerGameObjectPair> m_markerGameObjectPairs = new List<MarkerGameObjectPair>();
-        private Dictionary<int, GameObject> m_markerGameObjectDictionary = new Dictionary<int, GameObject>();
+        private GameObject _arObject;
         private bool m_showCameraCanvas = true;
 
         private Texture2D m_resultTexture;
@@ -63,7 +62,7 @@ namespace TryAR.MarkerTracking
             if (m_webCamTextureManager == null)
             {
                 Debug.LogError($"PCA: {nameof(m_webCamTextureManager)} field is required " +
-                            $"for the component {nameof(TrackingAppCoordinator)} to operate properly");
+                            $"for the component {nameof(ChArUcoTrackingAppCoordinator)} to operate properly");
                 enabled = false;
                 yield break;
             }
@@ -123,7 +122,7 @@ namespace TryAR.MarkerTracking
         private void Update()
         {
             // Skip if camera or tracking system isn't ready
-            if (m_webCamTextureManager.WebCamTexture == null || !m_arucoMarkerTracking.IsReady)
+            if (m_webCamTextureManager.WebCamTexture == null || !m_charucoMarkerTracking.IsReady)
                 return;
 
             // Toggle between camera view and AR visualization on button press
@@ -161,11 +160,11 @@ namespace TryAR.MarkerTracking
         private void ProcessMarkerTracking()
         {
             // Step 1: Detect ArUco markers in the current camera frame
-            m_arucoMarkerTracking.DetectMarker(m_webCamTextureManager.WebCamTexture, m_resultTexture);
+            m_charucoMarkerTracking.DetectMarker(m_webCamTextureManager.WebCamTexture, m_resultTexture);
             
             // Step 2: Estimate the pose of markers and position 3D objects accordingly
             // This maps the 2D marker positions to 3D space using the camera parameters
-            m_arucoMarkerTracking.EstimatePoseCanonicalMarker(m_markerGameObjectDictionary, m_cameraAnchor);
+            m_charucoMarkerTracking.EstimatePose(_arObject, m_cameraAnchor);
         }
 
         /// <summary>
@@ -175,17 +174,14 @@ namespace TryAR.MarkerTracking
         private void SetMarkerObjectsVisibility(bool isVisible)
         {
             // Toggle visibility for all GameObjects in the marker dictionary
-            foreach (var markerObject in m_markerGameObjectDictionary.Values)
+            if (_arObject != null)
             {
-                if (markerObject != null)
+                var rendererList = _arObject.GetComponentsInChildren<Renderer>(true);
+                foreach (var meshRenderer in rendererList)
                 {
-                    var rendererList = markerObject.GetComponentsInChildren<Renderer>(true);
-                    foreach (var meshRenderer in rendererList)
-                    {
-                        meshRenderer.enabled = isVisible;
-                    }
+                    meshRenderer.enabled = isVisible;
                 }
-            }
+            }   
         }
     
         /// <summary>
@@ -206,30 +202,13 @@ namespace TryAR.MarkerTracking
             var height = intrinsics.Resolution.y;  // Image height
             
             // Initialize the ArUco tracking with camera parameters
-            m_arucoMarkerTracking.Initialize(width, height, cx, cy, fx, fy);
+            m_charucoMarkerTracking.Initialize(width, height, cx, cy, fx, fy);
             
-            // Step 2: Build marker dictionary from serialized list
-            // This maps marker IDs to the GameObjects that should be positioned at each marker
-            BuildMarkerDictionary();
-            
-            // Step 3: Set up texture for visualization
+            // Step 2: Set up texture for visualization
             ConfigureResultTexture(width, height);
         }
 
-        /// <summary>
-        /// Builds the dictionary mapping marker IDs to GameObjects.
-        /// </summary>
-        private void BuildMarkerDictionary()
-        {
-            m_markerGameObjectDictionary.Clear();
-            foreach (var pair in m_markerGameObjectPairs)
-            {
-                if (pair.gameObject != null)
-                {
-                    m_markerGameObjectDictionary[pair.markerId] = pair.gameObject;
-                }
-            }
-        }
+
 
         /// <summary>
         /// Configures the texture for displaying camera and tracking results.
@@ -238,7 +217,7 @@ namespace TryAR.MarkerTracking
         /// <param name="height">Height of the camera resolution</param>
         private void ConfigureResultTexture(int width, int height)
         {
-            int divideNumber = m_arucoMarkerTracking.DivideNumber;
+            int divideNumber = m_charucoMarkerTracking.DivideNumber;
             m_resultTexture = new Texture2D(width/divideNumber, height/divideNumber, TextureFormat.RGB24, false);
             m_resultRawImage.texture = m_resultTexture;
         }

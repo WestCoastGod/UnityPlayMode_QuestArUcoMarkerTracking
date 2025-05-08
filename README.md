@@ -95,7 +95,5 @@ This implementation is based on the following sample repositories:
 If you have any questions, feel free to reach out:
 
 - **X (Twitter)**:  
-  - (EN) [@Tks_Yoshinaga](https://x.com/Tks_Yoshinaga)  
-  - (JP) [@Taka_Yoshinaga](https://x.com/Taka_Yoshinaga)  
+  - [@Tks_Yoshinaga](https://x.com/Tks_Yoshinaga)  
 - **LinkedIn**: [Tks Yoshinaga](https://www.linkedin.com/in/tks-yoshinaga/)  
-- **Discord**: [Join the community](https://discord.gg/kDENwuPD4t)

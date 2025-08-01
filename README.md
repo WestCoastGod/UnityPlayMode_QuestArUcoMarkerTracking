@@ -8,7 +8,9 @@ For a demonstration, check out the following video:
 
 -  Single Marker Tracking Demo (ArUco) - [Link](https://drive.google.com/file/d/153V5RZAuz3pqiAaiqv4zdsn7fD0gHWuS/view?usp=sharing)
 
-    ![Single Marker Demo](Materials/Picture1.png)
+    ![Single Marker Demo](Materials/Picture1.png) 
+    
+    ![](Materials/Picture2.png)
 
 ---
 

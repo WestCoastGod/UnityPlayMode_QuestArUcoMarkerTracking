@@ -85,4 +85,4 @@ This implementation is based on the following sample repositories:
 
 If you have any questions, feel free to reach out:
  
-- **LinkedIn**: [Oscar Zhang](www.linkedin.com/in/oscar-z-cw337)  
+- **LinkedIn**: [Oscar Zhang](https://www.linkedin.com/in/oscar-z-cw337)  

@@ -47,30 +47,6 @@ To use this project, please download and install the required marker files from 
 - Marker Size: **0.1m**  
 Feel free to modify these settings to suit your needs.
 
-### View Mode Switching
-You can switch the view mode by pressing the **A button** on the controller.
-
----
-
-### How to Change the Number of ArUco Markers
-
-If you want to track multiple ArUco markers simultaneously or change the number of markers in the scene, follow these steps. 
-
-1. Open the **ArUcoMarkerTracking.unity** scene and select the `ArUcoTrackingAppCoordinator` GameObject.  
-2. In the **Inspector**, locate the **ArUcoMarkerTrackingAppCoordinator** component and find the `MarkerGameObjectPairs` array.  
-3. Change the size of this array to match the **number of markers** you want to use.  
-4. For each **Element**, specify:  
-   - **Marker Id**: The ID of the marker you want to detect.  
-   - **Game Object**: The GameObject to display on top of the detected marker.  
-5. **Important Notes**:  
-   - Make sure there are no duplicate Marker IDs across the Elements.  
-   - Keep the Marker IDs within the valid range defined by the dictionary you are using (for example, **DICT_4X4_50** allows IDs from `0` to `49`).
-
-Below is an example of how `Marker Id` and `Game Object` pairs are set up in the Inspector:
-
-![fig1](https://github.com/TakashiYoshinaga/QuestArUcoMarkerTracking/blob/main/Materials/fig1.jpg)
-
----
 
 ## Reference Repositories
 
